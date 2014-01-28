@@ -1,7 +1,6 @@
 package ufront.mail;
 
-public class EmailConstants
-{
+class EmailConstants {
 	/** charset constant for koi8-r */
 	static inline public var KOI8_R = "koi8-r";
 

@@ -5,36 +5,42 @@ import tink.CoreApi;
 /**
 	An Abstract representing an email address and an optional name.
 
-	It is represented underneath by a `tink.core.Pair<String,String>`, which is usually a Vector with 2 items, so performance is quite good.
-	The first value in the pair is a `String` representing the email address, the second is a `String` representing an email.
+	It is represented underneath by a `String` represented as '$email;$name'
 **/
-abstract EmailAddress(Pair<String,String>) {
+abstract EmailAddress( String ) {
 
 	/**
 		Create a new EmailAddress.  Will throw an error if "email" is null or not valid according to `EmailAddress.validate()`
 	**/
-	public inline function new( email:String, ?name:String ) {
+	public function new( email:String, ?name="" ) {
 		if ( email==null || !validate(email) ) 
 			throw 'Invalid email address $email';
-
-		this = new Pair( email, name );
+		
+		this = '$email;$name';
 	}
 
 	/** The email address **/
-	public var email(get,null):String;
-	inline function get_email() return this.a;
+	public var email(get,never):String;
+	function get_email() {
+		return this.substr( 0, this.indexOf(";") );
+	}
 
 	/** The username part of the email address (before the @) **/
-	public var username(get,null):String;
-	inline function get_username() return this.a.split("@")[0];
+	public var username(get,never):String;
+	inline function get_username() return email.split("@")[0];
 
 	/** The domain part of the email address (after the @) **/
-	public var domain(get,null):String;
-	inline function get_domain() return this.a.split("@")[1];
+	public var domain(get,never):String;
+	inline function get_domain() return email.split("@")[1];
 	
 	/** The personal name associated with the email address **/
-	public var name(get,null):String;
-	inline function get_name() return this.b;
+	public var name(get,never):String;
+	function get_name() {
+		var split = this.indexOf(";");
+		return 
+			if ( this.length==split+1 ) ""
+			else this.substr( this.indexOf(";")+1 );
+	}
 
 	/**
 		Convert a string into an email address (with no name). 
@@ -47,24 +53,6 @@ abstract EmailAddress(Pair<String,String>) {
 		return new EmailAddress( email );
 	}
 
-	/**
-		Convert an array into an email address.  
-
-		It will assume the first String in the array is the email address, and the second is the name.
-
-		If an email address is not provided, or is invalid, an exception will be thrown.
-
-		If a name is not provided, it will be null.
-
-		If there are extra parts in the array, they will be ignored.
-	**/
-	@:from static function fromArray( parts:Array<String> ):EmailAddress {
-		var email = parts[0];
-		var name = parts[1];
-		
-		return new EmailAddress( email, name );
-	}
-
 	/** 
 		A string of the address.  
 
@@ -73,20 +61,26 @@ abstract EmailAddress(Pair<String,String>) {
 
 		This does not escape any quotations or brackets etc. in the name or address.
 	**/
-	@:to static inline function toString( email:String ):EmailAddress {
-		return (this.b!=null) ? '"${this.b}" <${this.a}>' : this.a;
+	@:to inline function toString():String {
+		trace ( (name!="") ? '"$name" <$email>' : email );
+		return (name!="") ? '"$name" <$email>' : email;
 	}
 
 	/**
-		Validate an address using a fairly basic regular expression from http://www.regular-expressions.info/email.html
+		Validate an address.
 
-		I may need to losen this as top-level domains come online, or if support for international characters becomes an issue.
+		For now all this does is check there's two parts: before the "@" and after the "@", and that neither contain spaces.
 
+		I haven't found a satisfactory regex solution... 
 		Please send a pull request if you have any suggestions.
 	**/
 	public static inline function validate( email:String ) {
-		return validationRegex.match( email );
-	}
+		var parts = email.split('@');
 
-	static var validationRegex = new Ereg( "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", "i" );
+		if ( parts.length!=2 ) return false;
+		if ( parts[0].length==0 && parts[0].indexOf(" ")>-1 ) return false;
+		if ( parts[1].length==0 && parts[1].indexOf(" ")>-1 ) return false;
+
+		return true;
+	}
 }

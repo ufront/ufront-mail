@@ -1,6 +1,8 @@
 package ufront.mail;
 
 import haxe.io.Bytes;
+import tink.CoreApi;
+using Lambda;
 
 /**
 	A representation of an Email Message.
@@ -19,20 +21,36 @@ import haxe.io.Bytes;
 **/
 class Email {
 
+	/**
+		The headerOrder when `getHeaders()` is called.
+
+		Default:
+
+		```
+		"Return-Path","Received","Date","From","Subject","Sender","To",
+		"Cc","Bcc","Content-Type","X-Mailer","X-Originating-IP","X-Originating-User"
+		```
+
+		You can change this array to influence the order headers are printed.
+	**/
+	public static var headerOrder = [
+		"Return-Path","Received","Date","From","Subject","Sender","To",
+		"Cc","Bcc","Content-Type","X-Mailer","X-Originating-IP","X-Originating-User"
+	];
+
 	// Addresses
 
 	public var fromAddress(default,null):EmailAddress = null;
-	public var bounceAddress(default,null):EmailAddress = null;
-	public var toList(default,null):List<EmailAddress>
-	public var ccList(default,null):List<EmailAddress>
-	public var bccList(default,null):List<EmailAddress>
-	public var replyList(default,null):List<EmailAddress>
+	public var replyToAddress(default,null):EmailAddress = null;
+	public var toList(default,null):List<EmailAddress>;
+	public var ccList(default,null):List<EmailAddress>;
+	public var bccList(default,null):List<EmailAddress>;
 
 	// Headers
 
 	public var date:Date;
 	public var charset:String;
-	public var headers(default,null):Map<String,Array<String>>
+	public var headers(default,null):Map<String,Array<String>>;
 	
 	// Content
 
@@ -48,7 +66,6 @@ class Email {
 		toList = new List();
 		ccList = new List();
 		bccList = new List();
-		replyList = new List();
 
 		headers = new Map();
 		date = Date.now();
@@ -65,7 +82,7 @@ class Email {
 	**/
 	public function to( ?email:EmailAddress, ?emails:Iterable<EmailAddress> ):Email {
 		if ( email!=null ) toList.add( email );
-		if ( emails!=null ) for ( e in emails ) toList.add( email );
+		if ( emails!=null ) for ( e in emails ) toList.add( e );
 		return this;
 	}
 
@@ -74,7 +91,7 @@ class Email {
 	**/
 	public function cc( ?email:EmailAddress, ?emails:Iterable<EmailAddress> ):Email {
 		if ( email!=null ) ccList.add( email );
-		if ( emails!=null ) for ( e in emails ) ccList.add( email );
+		if ( emails!=null ) for ( e in emails ) ccList.add( e );
 		return this;
 	}
 
@@ -83,16 +100,7 @@ class Email {
 	**/
 	public function bcc( ?email:EmailAddress, ?emails:Iterable<EmailAddress> ):Email {
 		if ( email!=null ) bccList.add( email );
-		if ( emails!=null ) for ( e in emails ) bccList.add( email );
-		return this;
-	}
-
-	/**
-		Add an email address (or list of addresses) to the `replyList`
-	**/
-	public function replyTo( ?email:EmailAddress, ?emails:Iterable<EmailAddress> ):Email {
-		if ( email!=null ) replyList.add( email );
-		if ( emails!=null ) for ( e in emails ) replyList.add( email );
+		if ( emails!=null ) for ( e in emails ) bccList.add( e );
 		return this;
 	}
 
@@ -101,6 +109,14 @@ class Email {
 	**/
 	public function from( email:EmailAddress ):Email {
 		fromAddress = email;
+		return this;
+	}
+
+	/**
+		Set the `reply-to` email address
+	**/
+	public function replyTo( email:EmailAddress ):Email {
+		replyToAddress = email;
 		return this;
 	}
 
@@ -159,17 +175,22 @@ class Email {
 	/**
 		Get all the headers set.
 
-		The order of the headers is not guaranteed to be the order you added them, or the order required for sending.  The `ufront.mail.IMailer` needs to take care of that.
+		The order of the headers is defined by the static array `headerOrder`.  
+		You can modify this in order to have the headers appear in a different order.
 
 		Returns an array where each item is an object containing a name and a value.
 	**/
-	public function getHeaders():Array<{ name:String, value:String }> {
+	public function getHeaders():Array<Pair<String,String>> {
 		var arr = [];
+
 		for ( n in headers.keys() ) {
 			for ( v in headers.get(n) ) {
-				arr.push({ name: n, value: v });
+				arr.push( new Pair(n,v) );
 			}
 		}
+
+		arr.sort( function(h1,h2) return Reflect.compare(headerOrder.indexOf(h1.a), headerOrder.indexOf(h2.a)) );
+
 		return arr;
 	}
 
@@ -221,7 +242,7 @@ class Email {
 		Attach a file to this email.
 	**/
 	public function attach( name:String, type:String, content:Bytes ):Email {
-		this.attachments.add( { name: name, type: type, content: content } );
+		this.attachments.add( new EmailAttachment(name,type,content) );
 		return this;
 	}
 
@@ -229,7 +250,7 @@ class Email {
 		Attach an image to be embedded in this email.
 	**/
 	public function attachImage( name:String, type:String, content:Bytes ):Email {
-		this.images.add( { name: name, type: type, content: content } );
+		this.images.add( new EmailAttachment(name,type,content) );
 		return this;
 	}
 }
