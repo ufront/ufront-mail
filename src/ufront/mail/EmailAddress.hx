@@ -61,7 +61,7 @@ abstract EmailAddress( String ) {
 
 		This does not escape any quotations or brackets etc. in the name or address.
 	**/
-	@:to inline function toString():String {
+	@:to public inline function toString():String {
 		trace ( (name!="") ? '"$name" <$email>' : email );
 		return (name!="") ? '"$name" <$email>' : email;
 	}
@@ -74,7 +74,7 @@ abstract EmailAddress( String ) {
 		I haven't found a satisfactory regex solution... 
 		Please send a pull request if you have any suggestions.
 	**/
-	public static inline function validate( email:String ) {
+	public static function validate( email:String ) {
 		var parts = email.split('@');
 
 		if ( parts.length!=2 ) return false;
