@@ -69,6 +69,7 @@ class UFMailLog extends Object {
 
 #if server
 	class UFMailLogViewController extends Controller {
+		@:route("/")
 		public function doDefault() {
 			var q = 'SELECT to, date, COUNT(to) AS numMessages FROM UFMailLog GROUP BY to ORDER BY date DESC';
 			var rs = sys.db.Manager.cnx.request( q );
@@ -80,6 +81,7 @@ class UFMailLog extends Object {
 			}
 		}
 
+		@:route("/viewaddress/$emailAddress/")
 		public function doViewAddress( emailAddress:String ) {
 			var emails = UFMailLog.manager.search( $to==emailAddress );
 			for ( e in emails ) {
@@ -87,6 +89,7 @@ class UFMailLog extends Object {
 			}
 		}
 
+		@:route("/viewmessage/$msgID/")
 		public function doViewMessage( msgID:Int ) {
 			var email = UFMailLog.manager.get( msgID );
 			trace ( 'toList: ' + email.email.toList );
