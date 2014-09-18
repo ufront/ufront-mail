@@ -1,0 +1,21 @@
+<h2>::subject::</h2>
+
+<ul>
+	<li>To: <a href="::baseUri::to/::to::/" title="View all emails to ::to::">::to::</a></li>
+	<li>From: <a href="::baseUri::from/::from::/" title="View all emails from ::from::">::from::</a></li>
+	<li>Sent: <a href="::baseUri::date/::date::/" title="View all emails on this day">::date::</a></li>
+	<li>Attachments: ::numAttachments::</li>
+	<li>Headers
+		<ul>
+			<li>::email.headers::</li>
+		</ul>
+	</li>
+</ul>
+
+<h3>Content <small>(HTML)</small></h3>
+
+<iframe src="::baseUri::email/::id::/html/" width="100%" frameborder="0"></iframe>
+
+<h3>Content <small>(Text)</small></h3>
+
+<pre>::text::</pre>

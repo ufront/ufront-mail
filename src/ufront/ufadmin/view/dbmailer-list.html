@@ -1,0 +1,23 @@
+<h2>::title::</h2>
+
+<table class="table">
+	<thead>
+		<tr>
+			<td>To / From</td>
+			<td>Subject / View</td>
+			<td>Time</td>
+			<td><abbr title="Num of Attachments">A</abbr></td>
+		</tr>
+	</thead>
+	::foreach emails::
+		<tr>
+			<td>
+				To: <a href="::baseUri::to/::to::/" title="View all emails to ::to::">::to::</a>
+				<br />From: <a href="::baseUri::from/::from::/" title="View all emails from ::from::">::from::</a>
+			</td>
+			<td><a href="::baseUri::email/::id::/" title="View This Email">::subject::</a></td>
+			<td><a href="::baseUri::date/::date::/" title="View all emails on this day">::date::</a></td>
+			<td>::numAttachments::</td>
+		</tr>
+	::end::
+</table>
