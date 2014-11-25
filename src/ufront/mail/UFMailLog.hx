@@ -1,5 +1,6 @@
 package ufront.mail;
 
+#if ufront_orm
 import ufront.db.Object;
 import sys.db.Types;
 
@@ -11,3 +12,4 @@ class UFMailLog extends Object {
 	public var email:SData<Email>;
 	public var numAttachments:Int;
 }
+#end

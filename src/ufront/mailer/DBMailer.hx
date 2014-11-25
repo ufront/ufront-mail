@@ -1,5 +1,6 @@
 package ufront.mailer;
 
+#if ufront_orm
 import ufront.mail.*;
 import ufront.db.Object;
 import sys.db.Types;
@@ -57,3 +58,4 @@ class DBMailer<T:UFMailer> implements UFMailer {
 		return o;
 	}
 }
+#end

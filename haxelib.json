@@ -2,11 +2,11 @@
   "name": "ufront-mail",
   "license": "MIT",
   "classPath": "src",
-  "tags": ["ufront","mail","email","smtp","mandrill"],
+  "tags": ["ufront","mail","email","smtp"],
   "description": "Tools to create and send email using ufront",
   "contributors": ["jason"],
   "releasenote": "Initial Release",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-rc.1",
   "url": "https://github.com/ufront/ufront-mail",
   "dependencies": {
     "tink_core": "",

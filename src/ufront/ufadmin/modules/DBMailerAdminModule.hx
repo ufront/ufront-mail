@@ -1,5 +1,6 @@
 package ufront.ufadmin.modules;
 
+#if ufront_ufadmin
 import ufront.ufadmin.UFAdminModule;
 import ufront.mailer.DBMailer;
 import ufront.mail.*;
@@ -71,3 +72,4 @@ class DBMailerAdminModule extends UFAdminModule {
 		return mailLog.email.html;
 	}
 }
+#end
