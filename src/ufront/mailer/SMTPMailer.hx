@@ -18,11 +18,11 @@ class SMTPMailer implements UFMailer {
 	var authUser:String;
 	var authPassword:String;
 
-	public function new( host:String, ?port:Int=25, ?user:String, ?pass:String ) {
-		this.host = host;
-		this.port = port;
-		this.authUser = user;
-		this.authPassword = pass;
+	public function new( server:{ host:String, ?port:Int, user:String, pass:String } ) {
+		this.host = server.host;
+		this.port = (server.port!=null) ? server.port : 25;
+		this.authUser = server.user;
+		this.authPassword = server.pass;
 	}
 
 	public function send( email:Email ) {
@@ -238,10 +238,5 @@ class SMTPMailer implements UFMailer {
 		cnx.write( "QUIT\r\n" );
 		cnx.close();
 	}
-
-	/**
-	**/
-
-	
 }
 #end
