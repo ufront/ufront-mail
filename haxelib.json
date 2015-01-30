@@ -5,8 +5,8 @@
   "tags": ["ufront","mail","email","smtp"],
   "description": "Tools to create and send email using ufront",
   "contributors": ["jason"],
-  "releasenote": "Work-around for ufront-mvc dropping `thx` for `thx.core` and no longer having date formatting functions.",
-  "version": "1.0.0-rc.2",
+  "releasenote": "Remove unnecessary trace.",
+  "version": "1.0.0-rc.3",
   "url": "https://github.com/ufront/ufront-mail",
   "dependencies": {
     "tink_core": "",

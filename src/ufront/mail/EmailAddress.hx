@@ -62,7 +62,6 @@ abstract EmailAddress( String ) {
 		This does not escape any quotations or brackets etc. in the name or address.
 	**/
 	@:to public inline function toString():String {
-		trace ( (name!="") ? '"$name" <$email>' : email );
 		return (name!="") ? '"$name" <$email>' : email;
 	}
 
