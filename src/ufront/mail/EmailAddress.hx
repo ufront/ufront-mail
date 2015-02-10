@@ -14,7 +14,7 @@ abstract EmailAddress( String ) {
 	**/
 	public function new( email:String, ?name="" ) {
 		if ( email==null || !validate(email) ) 
-			throw 'Invalid email address $email';
+			throw 'Invalid email address: $email';
 		
 		this = '$email;$name';
 	}
