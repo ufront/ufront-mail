@@ -5,8 +5,8 @@
   "tags": ["ufront","mail","email","smtp"],
   "description": "Tools to create and send email using ufront",
   "contributors": ["jason"],
-  "releasenote": "Add TestMailer for unit testing.",
-  "version": "1.0.0-rc.4",
+  "releasenote": "Add CSSInliner that works using a PHP script at runtime (can still be called from other platforms).",
+  "version": "1.0.0-rc.5",
   "url": "https://github.com/ufront/ufront-mail",
   "dependencies": {
     "tink_core": "",
