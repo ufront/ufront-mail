@@ -77,8 +77,8 @@ abstract EmailAddress( String ) {
 		var parts = email.split('@');
 
 		if ( parts.length!=2 ) return false;
-		if ( parts[0].length==0 && parts[0].indexOf(" ")>-1 ) return false;
-		if ( parts[1].length==0 && parts[1].indexOf(" ")>-1 ) return false;
+		if ( parts[0].length==0 || parts[0].indexOf(" ")>-1 ) return false;
+		if ( parts[1].length==0 || parts[1].indexOf(" ")>-1 ) return false;
 
 		return true;
 	}
