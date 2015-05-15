@@ -16,7 +16,7 @@ using tink.CoreApi;
 **/
 class CSSInliner<T:UFMailer> implements UFMailer {
 
-	var mailer:UFMailer;
+	var mailer:Null<UFMailer>;
 	var inliner:CSSInlinerTool;
 
 	/**
@@ -30,12 +30,12 @@ class CSSInliner<T:UFMailer> implements UFMailer {
 
 	public function send( email:Email ) {
 		email.html = inliner.inlineStyles( email.html );
-		return mailer.send(email);
+		return (mailer!=null) ? mailer.send(email) : Future.sync( Success(Noise) );
 	}
 
 	public function sendSync( email:Email ) {
 		email.html = inliner.inlineStyles( email.html );
-		return mailer.sendSync(email);
+		return (mailer!=null) ? mailer.sendSync(email) : Success(Noise);
 	}
 }
 
