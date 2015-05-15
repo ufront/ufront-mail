@@ -6,17 +6,18 @@ import ufront.mailer.DBMailer;
 import ufront.mail.*;
 import ufront.web.result.ViewResult;
 using CleverSort;
+using thx.Dates;
 
 class DBMailerAdminModule extends UFAdminModule {
 	public function new() {
 		super( "dbmailer", "DB Mailer" );
 	}
-	
+
 	@:route("/")
 	public function index() {
 		return listByDate( Date.now() );
 	}
-	
+
 	function displayEmailList( emailsList:Iterable<UFMailLog>, title:String ) {
 		var emails = Lambda.array( emailsList );
 		emails.cleverSort( _.date );
@@ -27,7 +28,7 @@ class DBMailerAdminModule extends UFAdminModule {
 			title:title,
 		});
 	}
-	
+
 	@:route("/date/$date/")
 	public function listByDate( date:Date ) {
 		// Waiting for these functions to make it into the new thx.core
@@ -39,19 +40,19 @@ class DBMailerAdminModule extends UFAdminModule {
 		var emails = UFMailLog.manager.search( $date>=dateSnappedDown && $date<=dateSnappedUp, { orderBy: -date } );
 		return displayEmailList( emails, 'Emails sent on $dateStr' );
 	}
-	
+
 	@:route("/to/$address/")
 	public function listAllEmailsToAddress( address:String ) {
 		var emails = UFMailLog.manager.search( $to==address );
 		return displayEmailList( emails, 'Emails sent to $address' );
 	}
-	
+
 	@:route("/from/$address/")
 	public function listAllEmailsFromAddress( address:String ) {
 		var emails = UFMailLog.manager.search( $from==address );
 		return displayEmailList( emails, 'Emails sent from $address' );
 	}
-	
+
 	@:route("/email/$id/")
 	public function showEmail( id:Int ) {
 		var mailLog = UFMailLog.manager.get( id );
@@ -67,7 +68,7 @@ class DBMailerAdminModule extends UFAdminModule {
 			baseUri: baseUri,
 		} );
 	}
-	
+
 	@:route("/email/$id/html/")
 	public function showEmailHTMLContent( id:Int ) {
 		var mailLog = UFMailLog.manager.get( id );
