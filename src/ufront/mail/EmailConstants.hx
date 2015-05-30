@@ -1,5 +1,8 @@
 package ufront.mail;
 
+/**
+A set of email constants used in various emails or mailers.
+**/
 class EmailConstants {
 	/** charset constant for koi8-r */
 	static inline public var KOI8_R = "koi8-r";

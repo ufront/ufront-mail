@@ -11,8 +11,16 @@ import sys.net.Socket;
 import sys.net.Host;
 import mtwin.mail.Exception;
 
-class SMTPMailer implements UFMailer {
-	
+/**
+A `UFMailer` that sends messages by SMTP.
+
+This relies on the `mtwin` haxelib for SMTP support.
+It currently only supports sending emails over unsecured SMTP.
+
+It is only supported on SYS platforms and runs synchronously.
+**/
+class SmtpMailer implements UFMailer {
+
 	var host:String;
 	var port:Int;
 	var authUser:String;
@@ -33,7 +41,7 @@ class SMTPMailer implements UFMailer {
 
 		var p:Part = null;
 		var numAttachments = email.images.length+email.attachments.length;
-		
+
 		if ( email.text!=null && email.html!=null ) {
 			// text & html (& possibly attachments)
 			p = new Part( "multipart/alternative", false, email.charset );
@@ -106,11 +114,11 @@ class SMTPMailer implements UFMailer {
 		function printList( l:List<EmailAddress> ) {
 			return [ for (a in l) if (a!=null) a.toString() ].join(",");
 		}
-		p.setHeader( "From", email.fromAddress.toString() ); 
-		if (email.replyToAddress!=null) p.setHeader( "Reply-To", email.replyToAddress.toString() ); 
+		p.setHeader( "From", email.fromAddress.toString() );
+		if (email.replyToAddress!=null) p.setHeader( "Reply-To", email.replyToAddress.toString() );
 		if (email.toList.length>0) p.setHeader( "To", printList(email.toList) );
 		if (email.ccList.length>0) p.setHeader( "Cc", printList(email.ccList) );
-		
+
 		var toList = [ for (list in [email.toList, email.ccList, email.bccList]) for (address in list) if (address!=null) address.email ];
 
 		sendSmtp( host, email.fromAddress.email, toList, p.get(), port, authUser, authPassword );
@@ -125,30 +133,30 @@ class SMTPMailer implements UFMailer {
 		if( port == null ) port = 25;
 
 		var cnx = new Socket();
-		
+
 		try {
 			cnx.connect(new Host(host),port);
 		}catch( e : Dynamic ){
 			cnx.close();
 			throw ConnectionError(host,port);
 		}
-		
+
 		var supportLoginAuth = false;
 
 		// get server init line
 		var ret = StringTools.trim(cnx.input.readLine());
 		var esmtp = ret.indexOf("ESMTP") >= 0;
-		
-		
+
+
 		while (StringTools.startsWith(ret, "220-")) {
 			ret = StringTools.trim(cnx.input.readLine());
 		}
-		
+
 		if ( esmtp ) { //if server support extensions
 			//EHLO
 			cnx.write( "EHLO " + Host.localhost() + "\r\n");
 			ret = "";
-			
+
 			do {
 				ret = StringTools.trim(cnx.input.readLine());
 				if( ret.substr(0,3) != "250" ){
@@ -176,7 +184,7 @@ class SMTPMailer implements UFMailer {
 					cnx.close();
 					throw SmtpAuthError(ret);
 				}
-				
+
 				cnx.write( Tools.encodeBase64(user) + "\r\n" );
 				ret = StringTools.trim(cnx.input.readLine());
 				if( ret.substr(0,3) != "334" ){

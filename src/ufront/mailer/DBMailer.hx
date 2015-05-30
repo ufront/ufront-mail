@@ -8,19 +8,18 @@ import ufront.web.Controller;
 using tink.CoreApi;
 
 /**
-	A Mailer that records all sent emails to the database.
+A Mailer that records all sent emails to the database.
 
-	You can optionally wrap another mailer (such as SMTPMailer), so that real mail is sent, AND we log all messages sent.
+You can optionally wrap another mailer (such as `SmtpMailer`), so that real mail is sent, AND we log all messages sent.
 
-	If DBMailer is wrapping another mailer, the outcomes (telling whether it worked or not) will be based on the mailer we are wrapping, not the DB saving.
+If DBMailer is wrapping another mailer, the outcomes (telling whether it worked or not) will be based on the mailer we are wrapping, not the DB saving.
 **/
 class DBMailer<T:UFMailer> implements UFMailer {
-	
+
 	var mailer:UFMailer;
 
 	/**
-		@param wrapMailer: An existing mailer to use.  
-		                   All calls to send() and sendSync() will save the message to the DB, and also call the same method on the mailer you are wrapping.
+	@param wrapMailer: An existing mailer to use. All calls to `send()` and `sendSync()` will save the message to the DB, and also call the same method on the mailer you are wrapping.
 	**/
 	public function new( ?wrapMailer:UFMailer ) {
 		this.mailer = wrapMailer;

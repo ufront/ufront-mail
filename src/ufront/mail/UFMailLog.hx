@@ -4,6 +4,11 @@ package ufront.mail;
 import ufront.db.Object;
 import sys.db.Types;
 
+/**
+A database record that tracks an email that has been sent.
+
+For use with `DBMailer`.
+**/
 class UFMailLog extends Object {
 	public var to:SString<255>;
 	public var from:SString<255>;

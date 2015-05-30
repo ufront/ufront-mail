@@ -4,7 +4,7 @@ import ufront.mail.*;
 using tink.CoreApi;
 
 /**
-	A UFMailer implementation that does not send any email.
+A UFMailer implementation that does not send any email.
 **/
 class NullMailer implements UFMailer {
 

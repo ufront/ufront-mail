@@ -7,14 +7,14 @@ import ufront.web.Controller;
 using tink.CoreApi;
 
 /**
-	A Mailer that will just call a different mailer, but will inline CSS styles as it goes.
+A Mailer that will just call a different mailer, but will inline CSS styles as it goes.
 
-	It uses a configurable CSS Inlining service.
+It uses a configurable CSS Inlining service.
 
-	For now, an implementation which calls the [CssToInlineStyles](https://github.com/tijsverkoyen/CssToInlineStyles/) PHP script is provided.
-	In future hopefully we'll have less platform dependant
+For now, an implementation which calls the [CssToInlineStyles](https://github.com/tijsverkoyen/CssToInlineStyles/) PHP script is provided.
+In future hopefully we'll have less platform dependant (and more Haxe friendly) options for inlining CSS scripts.
 **/
-class CSSInliner<T:UFMailer> implements UFMailer {
+class CssInliner<T:UFMailer> implements UFMailer {
 
 	var mailer:Null<UFMailer>;
 	var inliner:CSSInlinerTool;
@@ -39,11 +39,14 @@ class CSSInliner<T:UFMailer> implements UFMailer {
 	}
 }
 
-interface CSSInlinerTool {
+/**
+A CSSInlinerTool turns a HTML file with a `<style>` tag in it's head
+**/
+interface CssInlinerTool {
 	/**
-		A function which will take HTML and inline any styles.
-		Each inliner should inline the `<style>` tags in the head.
-		Whether or not we inline `<link type="text/css" rel="stylesheet">` is up to the inliner.
+	A function which will take HTML and inline any styles.
+	Each inliner should inline the `<style>` tags in the head.
+	Whether or not we inline `<link type="text/css" rel="stylesheet">` is up to the inliner.
 	**/
 	public function inlineStyles( html:String ):String;
 
@@ -52,14 +55,21 @@ interface CSSInlinerTool {
 
 #if sys
 	/**
-		This uses the [CssToInlineStyles](https://github.com/tijsverkoyen/CssToInlineStyles/) PHP script to inline styles.
-		Your server must have PHP installed, but we call this using the `sys.io.Process` api and the `php` command line, so your app doesn't need to be targetting PHP.
-		You must have the PHP file and it's dependencies installed on your system.
-		You can set the path to the PHP script with the string passed to the constructor.
-		If using dependency injection it will look for a String "pathForCssToInlineStylesScript".
-	**/
-	class PHPCssToInlineStyles implements CSSInlinerTool {
+	This uses the [CssToInlineStyles](https://github.com/tijsverkoyen/CssToInlineStyles/) PHP script to inline styles.
 
+	The path to the inliner script must be injected as a String named "pathForCssToInlineStylesScript".
+
+	Your server must have PHP installed, but we call this using the `sys.io.Process` api and the `php` command line, so your app doesn't need to be targetting PHP.
+	You must have the PHP file and it's dependencies installed on your system.
+	You can set the path to the PHP script with the string passed to the constructor.
+	If using dependency injection it will look for a String "pathForCssToInlineStylesScript".
+	**/
+	class PhpCssToInlineStyles implements CssInlinerTool {
+
+		/**
+		This is a static function to set up the CssToInlineStyles PHP script at a certain location.
+		You can call this from your app or from a command line task to set the inliner up automatically.
+		**/
 		public static function setupInlinerScript( scriptPath:String ) {
 			var directory = haxe.io.Path.directory( scriptPath );
 			var filename = haxe.io.Path.withoutDirectory( scriptPath );

@@ -4,6 +4,9 @@ import haxe.io.Bytes;
 import haxe.Serializer;
 import haxe.Unserializer;
 
+/**
+An abstract describing an email attachment - essentially an attachment file type, a file name, and a set of `Bytes` content.
+**/
 abstract EmailAttachment({ type:String, name:String, content:Bytes }) {
 	inline public function new( type, name, content ) {
 		this = { type: type, name: name, content: content };

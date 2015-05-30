@@ -4,7 +4,7 @@ import ufront.mail.*;
 using tink.CoreApi;
 
 /**
-	A UFMailer implementation that just stores the messages in memory, so we can run unit tests.
+A UFMailer implementation that just stores the messages in memory, making it easy to run unit tests.
 **/
 class TestMailer implements UFMailer {
 
