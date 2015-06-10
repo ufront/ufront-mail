@@ -5,8 +5,7 @@ import ufront.ufadmin.UFAdminModule;
 import ufront.mailer.DBMailer;
 import ufront.mail.*;
 import ufront.web.result.ViewResult;
-using CleverSort;
-using thx.Dates;
+using DateTools;
 
 class DBMailerAdminModule extends UFAdminModule {
 	public function new() {
@@ -20,7 +19,7 @@ class DBMailerAdminModule extends UFAdminModule {
 
 	function displayEmailList( emailsList:Iterable<UFMailLog>, title:String ) {
 		var emails = Lambda.array( emailsList );
-		emails.cleverSort( _.date );
+		emails.sort( function(e1,e2) return Reflect.compare(e1.date,e2.date) );
 		var template = CompileTime.readFile( "/ufront/ufadmin/view/dbmailer-list.html" );
 		return UFAdminModule.wrapInLayout( title, template, {
 			emails:emails,
@@ -31,11 +30,8 @@ class DBMailerAdminModule extends UFAdminModule {
 
 	@:route("/date/$date/")
 	public function listByDate( date:Date ) {
-		// Waiting for these functions to make it into the new thx.core
-//		var dateSnappedDown = Date.fromTime( date.getTime().snap(Day,Down) );
-//		var dateSnappedUp = Date.fromTime( date.getTime().snap(Day,Up) );
-		var dateSnappedDown = date;
-		var dateSnappedUp = DateTools.delta( date, 24*60*60*1000 );
+		var dateSnappedDown = new Date( date.year, date.month, date.date, 0, 0, 0 );
+		var dateSnappedUp = DateTools.delta( dateSnappedDown, 24*60*60*1000 );
 		var dateStr = date.toString();
 		var emails = UFMailLog.manager.search( $date>=dateSnappedDown && $date<=dateSnappedUp, { orderBy: -date } );
 		return displayEmailList( emails, 'Emails sent on $dateStr' );
