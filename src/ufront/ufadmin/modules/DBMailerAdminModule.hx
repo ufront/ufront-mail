@@ -30,7 +30,7 @@ class DBMailerAdminModule extends UFAdminModule {
 
 	@:route("/date/$date/")
 	public function listByDate( date:Date ) {
-		var dateSnappedDown = new Date( date.year, date.month, date.date, 0, 0, 0 );
+		var dateSnappedDown = new Date( date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0 );
 		var dateSnappedUp = DateTools.delta( dateSnappedDown, 24*60*60*1000 );
 		var dateStr = date.toString();
 		var emails = UFMailLog.manager.search( $date>=dateSnappedDown && $date<=dateSnappedUp, { orderBy: -date } );
