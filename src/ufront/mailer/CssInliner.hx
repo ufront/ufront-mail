@@ -17,13 +17,13 @@ In future hopefully we'll have less platform dependant (and more Haxe friendly) 
 class CssInliner<T:UFMailer> implements UFMailer {
 
 	var mailer:Null<UFMailer>;
-	var inliner:CSSInlinerTool;
+	var inliner:CssInlinerTool;
 
 	/**
 		@param inliner: The inliner tool to use. See implementations of `CSSInlinerTool`.
 		@param wrapMailer: An existing mailer to use to actually send the emails after we've done our inlining.
 	**/
-	public function new( inliner:CSSInlinerTool, wrapMailer:UFMailer ) {
+	public function new( inliner:CssInlinerTool, wrapMailer:UFMailer ) {
 		this.mailer = wrapMailer;
 		this.inliner = inliner;
 	}
