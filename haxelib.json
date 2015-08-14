@@ -5,11 +5,17 @@
   "tags": ["ufront","mail","email","smtp"],
   "description": "Tools to create and send email using ufront",
   "contributors": ["jason"],
-  "releasenote": "Add CSSInliner that works using a PHP script at runtime (can still be called from other platforms).",
-  "version": "1.0.0-rc.5",
+  "releasenote": "
+- Removed dependency on cleversort, thx
+- Allow CSSInliner to work without an 'inner mailer'.
+- Documentation clean-up
+- Renamed SMTPMailer to SmtpMailer,
+- Renamed CSSInliner to CssInliner (and the same for other types in this module)
+",
+  "version": "1.0.0",
   "url": "https://github.com/ufront/ufront-mail",
   "dependencies": {
     "tink_core": "",
-    "mtwin": ""
+    "mtwin": "1.6.0"
   }
 }
