@@ -5,14 +5,8 @@
   "tags": ["ufront","mail","email","smtp"],
   "description": "Tools to create and send email using ufront",
   "contributors": ["jason"],
-  "releasenote": "
-- Removed dependency on cleversort, thx
-- Allow CSSInliner to work without an 'inner mailer'.
-- Documentation clean-up
-- Renamed SMTPMailer to SmtpMailer,
-- Renamed CSSInliner to CssInliner (and the same for other types in this module)
-",
-  "version": "1.0.0",
+  "releasenote": "Don't use 'null' as the name in the email address/name pair. Add `reset()` function to TestMailer",
+  "version": "1.1.0",
   "url": "https://github.com/ufront/ufront-mail",
   "dependencies": {
     "tink_core": "",

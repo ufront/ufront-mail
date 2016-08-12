@@ -14,6 +14,10 @@ class TestMailer implements UFMailer {
 
 	public function new( ?emulateFailure=false ) {
 		this.emulateFailure = emulateFailure;
+		reset();
+	}
+
+	public function reset() {
 		this.messagesSent = [];
 		this.messagesFailed = [];
 	}
