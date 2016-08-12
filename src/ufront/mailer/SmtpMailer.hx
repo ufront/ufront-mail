@@ -141,22 +141,25 @@ class SmtpMailer implements UFMailer {
 			throw ConnectionError(host,port);
 		}
 
+		var esmtp = false;
 		var supportLoginAuth = false;
 
 		// get server init line
 		var ret = StringTools.trim(cnx.input.readLine());
-		var esmtp = ret.indexOf("ESMTP") >= 0;
-
 
 		while (StringTools.startsWith(ret, "220-")) {
 			ret = StringTools.trim(cnx.input.readLine());
 		}
+		
+		//see https://en.wikipedia.org/wiki/Extended_SMTP
+		cnx.write( "EHLO " + Host.localhost() + "\r\n");
+		ret = StringTools.trim(cnx.input.readLine());
+		if ( ret.substr(0, 3) == "250" ){
+			esmtp = true;
+		}
+		
 
 		if ( esmtp ) { //if server support extensions
-			//EHLO
-			cnx.write( "EHLO " + Host.localhost() + "\r\n");
-			ret = "";
-
 			do {
 				ret = StringTools.trim(cnx.input.readLine());
 				if( ret.substr(0,3) != "250" ){
