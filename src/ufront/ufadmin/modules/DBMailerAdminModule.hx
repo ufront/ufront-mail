@@ -20,7 +20,7 @@ class DBMailerAdminModule extends UFAdminModule {
 	function displayEmailList( emailsList:Iterable<UFMailLog>, title:String ) {
 		var emails = Lambda.array( emailsList );
 		emails.sort( function(e1,e2) return Reflect.compare(e1.date,e2.date) );
-		var template = CompileTime.readFile( "/ufront/ufadmin/view/dbmailer-list.html" );
+		var template = CompileTime.readFile( "ufront/ufadmin/view/dbmailer-list.html" );
 		return UFAdminModule.wrapInLayout( title, template, {
 			emails:emails,
 			baseUri:baseUri,
@@ -52,7 +52,7 @@ class DBMailerAdminModule extends UFAdminModule {
 	@:route("/email/$id/")
 	public function showEmail( id:Int ) {
 		var mailLog = UFMailLog.manager.get( id );
-		var template = CompileTime.readFile( "/ufront/ufadmin/view/dbmailer-view.html" );
+		var template = CompileTime.readFile( "ufront/ufadmin/view/dbmailer-view.html" );
 		return UFAdminModule.wrapInLayout( title, template, {
 			id: mailLog.id,
 			to: mailLog.to,
