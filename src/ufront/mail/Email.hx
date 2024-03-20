@@ -150,10 +150,12 @@ class Email {
 	If no such header exists, it will return `null`.
 	**/
 	public function getHeader( name ):Null<String> {
-		if ( headers.exists(name) )
-			return headers.get( name )[0];
-		else
+		if ( headers.exists(name) ) {
+			var h = headers.get( name ); 
+			return h[0];
+		}else{
 			return null;
+		}
 	}
 
 	/**
